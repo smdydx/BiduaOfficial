@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from "react";
+
 import { Route, Switch, useLocation } from "wouter";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
@@ -45,7 +47,7 @@ import Profile from "./admin panel/sidebar/settings/Profile";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import LoginPage from "./admin panel/login/loginpage";
-
+import PrivacyModal from "@/components/PrivacyModal";
 function Router() {
   return (
     <Switch>
@@ -141,10 +143,26 @@ function App() {
   const isAdminRoute = location.startsWith("/admin");
   const isLoginPage = location === "/login";
 
+  // Privacy Modal state
+  const [showPrivacy, setShowPrivacy] = useState(false);
+
+  useEffect(() => {
+    const accepted = localStorage.getItem("privacyAccepted");
+    if (!accepted && !isAdminRoute && !isLoginPage) setShowPrivacy(true);
+  }, [location, isAdminRoute, isLoginPage]);
+
+  const handleAccept = () => {
+    localStorage.setItem("privacyAccepted", "true");
+    setShowPrivacy(false);
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <div className="min-h-screen flex flex-col">
+          {/* Privacy Policy Modal */}
+          <PrivacyModal open={showPrivacy} onAccept={handleAccept} />
+
           {/* Show Header only if NOT admin route AND NOT login page */}
           {!isAdminRoute && !isLoginPage && <Header />}
 
