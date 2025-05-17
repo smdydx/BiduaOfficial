@@ -11,7 +11,7 @@ export default defineConfig({
       clientPort: 443, // Ensure HMR works correctly
     },
     allowedHosts: [
-      "biduafrontendupdate.onrender.com", // Add this host
+      "biduaofficial.onrender.com", // Add this host
     ],
   },
   plugins: [react()],
